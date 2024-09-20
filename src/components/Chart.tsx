@@ -37,7 +37,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({ data }) => {
     };
   }, [data]);
 
-  return <div className=' dark:bg-background mx-auto' ref={chartContainerRef} style={{ width: '90%', height: '400px' }} />;
+  return <div className=' dark:bg-background mx-auto' ref={chartContainerRef} style={{ width: '100%', height: '400px' }} />;
 };
 
 export default TradingViewChart;
