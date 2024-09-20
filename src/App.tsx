@@ -1,35 +1,34 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import "./App.css";
+import Chart from "./components/Chart";
+import Navbar from "./components/Navbar";
+import { fetchData } from "./lib/Api";
+import TimeSelector from "./components/TimeSelector";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [candlestickData, setCandlestickData] = useState<any[]>([]);
+  const [intervalTime, setIntervalTime] = useState<string>("1m");
+  console.log(intervalTime);
+  useEffect(() => {
+    const Data = async () => {
+      const data = await fetchData("BTCUSDT", intervalTime);
+      setCandlestickData(data);
+    };
+    Data();
+    const intervalId = setInterval(Data, 60000);
+
+    return () => clearInterval(intervalId);
+  }, [intervalTime]);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <main className="dark:bg-background w-full h-screen">
+      <Navbar />
+      <div className="flex justify-center space-x-4">
+        <TimeSelector onChange={setIntervalTime} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      <Chart data={candlestickData} />
+    </main>
+  );
 }
 
-export default App
+export default App;
